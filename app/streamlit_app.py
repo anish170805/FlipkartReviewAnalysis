@@ -1,51 +1,37 @@
 import streamlit as st
 import joblib
-import pandas as pd
-
 from utils.preprocessing import preprocess_text
+import numpy as np
 
+st.set_page_config(page_title="Sentiment Analyzer", layout="centered")
 
-# ---------- Page Configuration ----------
-st.set_page_config(
-    page_title="Flipkart Badminton Sentiment Analysis",
-    layout="centered"
-)
+st.title("Flipkart Review Sentiment Analysis")
 
+model = joblib.load("D:\\FK Sentimental analysis\\models\\sentiment_model.joblib")
 
-# ---------- Load Trained Pipeline ----------
-@st.cache_resource
-def load_model():
-    return joblib.load("D:\\FK Sentimental analysis\\models\\sentiment_model.joblib")
+user_input = st.text_area("Enter a product review:")
 
-
-model = load_model()
-
-
-# ---------- UI ----------
-st.title("🏸 Flipkart Badminton Review Sentiment Analyzer")
-st.write(
-    "Analyze Flipkart badminton product reviews using a machine learning model "
-    "trained with TF-IDF and multiple classifiers."
-)
-
-review_text = st.text_area(
-    "Enter a product review",
-    height=180,
-    placeholder="Example: The racket quality is excellent and very durable."
-)
-
-if st.button("Predict Sentiment"):
-
-    if review_text.strip() == "":
-        st.warning("Please enter a review before predicting.")
+if st.button("Analyze Sentiment"):
+    if not user_input.strip():
+        st.warning("Please enter some text.")
     else:
-        # Preprocess input
-        cleaned_review = preprocess_text(review_text)
+        cleaned_text = preprocess_text(user_input)
 
-        # Model expects raw text (pipeline handles TF-IDF)
-        prediction = model.predict([cleaned_review])[0]
+        prediction = model.predict([cleaned_text])[0]
+
+        # Confidence handling
+        if hasattr(model, "predict_proba"):
+            confidence = np.max(model.predict_proba([cleaned_text]))
+        else:
+            confidence = None
 
         if prediction == 1:
             st.success("✅ Positive Review")
         else:
             st.error("❌ Negative Review")
+
+        if confidence is not None:
+            st.info(f"Confidence: {confidence:.2f}")
+
+        with st.expander("See cleaned text"):
+            st.write(cleaned_text)

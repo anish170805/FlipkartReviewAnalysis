@@ -10,7 +10,8 @@ import mlflow.sklearn
 
 
 # Set MLflow experiment
-mlflow.set_experiment("Flipkart-Badminton-Sentiment")
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
+mlflow.set_experiment("Flipkart_Sentiment_Analysis")
 
 
 @flow(name="Sentiment Training Flow")

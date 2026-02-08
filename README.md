@@ -8,13 +8,10 @@ The project focuses on clean training pipelines, reproducibility, and practical 
 
 ## Overview
 
-This project analyzes customer reviews and predicts sentiment using multiple machine learning models.  
+This project analyzes customer reviews and predicts sentiment using multiple machine learning models.
 It includes a complete training workflow, experiment tracking with MLflow, and a Streamlit-based interface for running predictions.
 
-Key goals:
-- Train and compare multiple models reliably
-- Track experiments and models over time
-- Provide a simple UI for inference without exposing an API
+The system is designed to be modular, reproducible, and easy to extend with additional models or datasets.
 
 ---
 
@@ -22,24 +19,28 @@ Key goals:
 
 - **Text Preprocessing**
   - Cleaning and normalization
+  - Tokenization and lemmatization
   - TF-IDF vectorization with n-grams
 
 - **Model Training & Selection**
   - Logistic Regression
   - Linear SVM
   - Naive Bayes
-  - Cross-validated model selection
+  - Cross-validated hyperparameter tuning
+  - Automatic best-model selection
 
 - **Experiment Tracking**
   - Parameters, metrics, and artifacts logged using MLflow
-  - Local tracking server for inspection and comparison
+  - Confusion matrices and classification reports saved per run
+  - Centralized experiment comparison via MLflow UI
 
 - **Workflow Orchestration**
-  - Training pipeline defined using Prefect flows
+  - Training pipeline implemented using Prefect flows
 
 - **Interactive UI**
   - Streamlit app for live sentiment prediction
-  - Loads trained model artifacts directly
+  - Displays prediction confidence when available
+  - Shows cleaned text used by the model
 
 ---
 
@@ -94,7 +95,7 @@ pip install -r requirements.txt
 
 ## Training the Model
 
-The training pipeline is executed as a Python module to ensure imports work correctly.
+The training pipeline must be executed as a Python module to ensure imports resolve correctly.
 
 From the project root:
 
@@ -102,37 +103,56 @@ From the project root:
 python -m training.train_flow
 ```
 
+This process:
+- Loads and cleans the dataset
+- Trains and evaluates multiple models
+- Logs metrics and artifacts to MLflow
+- Saves the best-performing model locally
+
 ---
 
 ## Experiment Tracking (MLflow)
 
+Start the MLflow tracking UI in a separate terminal:
+
 ```bash
-mlflow ui
+mlflow ui --host 127.0.0.1 --port 5000
 ```
 
-Open:
+Open in your browser:
+
 ```
 http://127.0.0.1:5000
 ```
+
+MLflow is used to:
+- Compare model performance
+- Inspect hyperparameters
+- View evaluation artifacts
+- Manage experiment history
 
 ---
 
 ## Running the Streamlit App
 
+After training completes and a model is saved:
+
 ```bash
 streamlit run streamlit_app.py
 ```
+
+The UI allows you to enter custom review text and receive real-time sentiment predictions.
 
 ---
 
 ## Tech Stack
 
-- Python
-- Scikit-learn
-- MLflow
-- Prefect
-- Streamlit
-- Pandas, NumPy
+- **Python**
+- **Scikit-learn**
+- **MLflow**
+- **Prefect**
+- **Streamlit**
+- **Pandas, NumPy**
 
 ---
 
