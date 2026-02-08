@@ -1,91 +1,141 @@
-# Project Title
+# FK Sentiment Analysis
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+A sentiment analysis system built on Flipkart product reviews, combining classical machine learning with experiment tracking and an interactive UI.
 
-A brief one-sentence description of your project goes here.
+The project focuses on clean training pipelines, reproducibility, and practical usability rather than just model accuracy.
 
-## Description
+---
 
-Provide a more detailed description of your project. Explain the problem it solves, your motivation for creating it, and the project's primary goals. This is your chance to engage potential users and contributors.
+## Overview
 
-## Table of Contents
+This project analyzes customer reviews and predicts sentiment using multiple machine learning models.  
+It includes a complete training workflow, experiment tracking with MLflow, and a Streamlit-based interface for running predictions.
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+Key goals:
+- Train and compare multiple models reliably
+- Track experiments and models over time
+- Provide a simple UI for inference without exposing an API
+
+---
 
 ## Features
 
-List the key features and functionalities of your project.
+- **Text Preprocessing**
+  - Cleaning and normalization
+  - TF-IDF vectorization with n-grams
 
-- ✨ Feature 1: A brief explanation of what it does.
-- ✨ Feature 2: A brief explanation of what it does.
-- ✨ Feature 3: A brief explanation of what it does.
+- **Model Training & Selection**
+  - Logistic Regression
+  - Linear SVM
+  - Naive Bayes
+  - Cross-validated model selection
 
-## Installation
+- **Experiment Tracking**
+  - Parameters, metrics, and artifacts logged using MLflow
+  - Local tracking server for inspection and comparison
 
-Provide clear, step-by-step instructions on how to get your project set up and running locally.
+- **Workflow Orchestration**
+  - Training pipeline defined using Prefect flows
 
-### Prerequisites
+- **Interactive UI**
+  - Streamlit app for live sentiment prediction
+  - Loads trained model artifacts directly
 
-List any software, tools, or libraries that must be installed before a user can run your project.
+---
 
-- e.g., Node.js v20.x or higher
-- e.g., Python 3.11+
+## Project Structure
 
-### Setup
-
-1.  Clone the repository to your local machine:
-    ```bash
-    git clone https://github.com/your-username/your-repository.git
-    ```
-2.  Navigate into the project directory:
-    ```bash
-    cd your-repository
-    ```
-3.  Install the necessary dependencies:
-    ```bash
-    # Using npm
-    npm install
-
-    # Or using pip for Python
-    # pip install -r requirements.txt
-    ```
-
-## Usage
-
-Explain how to use your application after installation. Include code blocks for commands and provide examples of different use cases if possible.
-
-```bash
-# Run the application
-npm start
-
-# Or for a Python project
-# python main.py --input data.csv
+```
+FK Sentimental analysis/
+│
+├── app/
+│   └── utils/
+│       └── preprocessing.py
+│
+├── training/
+│   ├── __init__.py
+│   ├── train_flow.py
+│   ├── data_loader.py
+│   ├── cleaning.py
+│   └── model_selection.py
+│
+├── streamlit_app.py
+├── data/
+│   └── data.csv
+├── models/
+│   └── sentiment_model.joblib
+├── mlruns/
+├── requirements.txt
+└── README.md
 ```
 
-## Technologies Used
+---
 
-List the main technologies, frameworks, and libraries that power your project.
+## Setup
 
-- **Frontend:** React, Next.js, etc.
-- **Backend:** Node.js, Express, Django, etc.
-- **Database:** MongoDB, PostgreSQL, etc.
-- **Testing:** Jest, Pytest, etc.
+### Requirements
+- Python 3.11+
+- Virtual environment (recommended)
 
-## Contributing
+### Installation
 
-We welcome contributions! If you're interested in improving this project, please see the `CONTRIBUTING.md` file for details on our code of conduct and the process for submitting pull requests.
+```bash
+git clone https://github.com/your-username/fk-sentimental-analysis.git
+cd "FK Sentimental analysis"
+
+python -m venv venv
+venv\Scripts\activate   # Windows
+# source venv/bin/activate  # macOS/Linux
+
+pip install -r requirements.txt
+```
+
+---
+
+## Training the Model
+
+The training pipeline is executed as a Python module to ensure imports work correctly.
+
+From the project root:
+
+```bash
+python -m training.train_flow
+```
+
+---
+
+## Experiment Tracking (MLflow)
+
+```bash
+mlflow ui
+```
+
+Open:
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## Running the Streamlit App
+
+```bash
+streamlit run streamlit_app.py
+```
+
+---
+
+## Tech Stack
+
+- Python
+- Scikit-learn
+- MLflow
+- Prefect
+- Streamlit
+- Pandas, NumPy
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the `LICENSE.md` file for details.
-
-## Acknowledgments
-
-- Give credit to anyone whose code or ideas you used.
-- Thank any contributors or inspirations.
+MIT License
