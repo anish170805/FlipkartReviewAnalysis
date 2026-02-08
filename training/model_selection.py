@@ -4,6 +4,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
 
 def train_and_select_model(df, text_col="Review text", label_col="label"):
     X = df[text_col]
@@ -60,10 +62,22 @@ def train_and_select_model(df, text_col="Review text", label_col="label"):
 
         grid.fit(X_train, y_train)
 
-        best_models[name] = {
-            "model": grid.best_estimator_,
-            "score": grid.best_score_
-        }
+        best_models[name] = grid.best_estimator_
 
-    best_model_name = max(best_models, key=lambda x: best_models[x]["score"])
-    return best_models[best_model_name]["model"]
+    # Select best model using validation F1
+    best_model = max(
+        best_models.values(),
+        key=lambda m: f1_score(y_test, m.predict(X_test))
+    )
+
+    # Final evaluation
+    y_pred = best_model.predict(X_test)
+
+    metrics = {
+        "accuracy": accuracy_score(y_test, y_pred),
+        "precision": precision_score(y_test, y_pred),
+        "recall": recall_score(y_test, y_pred),
+        "f1": f1_score(y_test, y_pred)
+    }
+
+    return best_model, metrics
